@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/src/style.scss" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="prompt">
+      <h1>JSON Tree Viewer</h1>
+      <p>Simple JSON Viewer that runs completely on-client. No data exchange </p>
+      <input type="file" size="60" />
+    </div>
+
+
+    <div class="viewer">
+      <h1 class="viewer__header"></h1>
+      <ul class="viewer__list"></ul>
+    </div>
+  </div>
+</body>
+
+<script type="module" src="/src/main.ts"></script>
+
+</html>
