@@ -8,6 +8,9 @@ const listHeaderHeight = 80;
 
 const listElement = document.querySelector(".viewer__list") as HTMLElement;
 const promptElement = document.querySelector(".prompt") as HTMLElement;
+const loadingElement = document.querySelector(
+  ".prompt__loading"
+) as HTMLElement;
 const viewerElement = document.querySelector(".viewer") as HTMLElement;
 const viewHeaderElement = document.querySelector(
   ".viewer__header"
@@ -45,6 +48,7 @@ function getListHeights() {
 
 function readSingleFile(e: any) {
   if (!e.target.files) return;
+  showLoadingMessage();
   var file = e.target.files[0];
   if (!file) {
     return;
@@ -121,6 +125,10 @@ function renderList() {
 
 function hidePrompt() {
   promptElement.style.display = "none";
+}
+
+function showLoadingMessage() {
+  loadingElement.style.visibility = "initial";
 }
 
 function showViewer() {
