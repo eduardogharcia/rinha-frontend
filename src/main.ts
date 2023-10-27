@@ -1,4 +1,4 @@
-import flattenJSONObj from "./flatten-json-obj";
+const flattenWorker = new Worker("./src/flatten-worker.js");
 
 let filename = "";
 let list: any[] = [];
@@ -56,14 +56,25 @@ function readSingleFile(e: any) {
   reader.onload = function (e) {
     if (!e.target) return;
     var contents = e.target.result as string;
-    displayContents(contents);
+    flattenWorker.postMessage(contents);
   };
+
   reader.readAsText(file);
 }
 
-function displayContents(contents: string) {
+flattenWorker.onmessage = function (e) {
+  if (e.data.type === "CHUNK") {
+    list = list.concat(e.data.data);
+    return;
+  }
+
+  if (e.data.type === "EOF") {
+    displayContents();
+  }
+};
+
+function displayContents() {
   try {
-    list = flattenJSONObj(JSON.parse(contents));
     showViewer();
     renderList();
   } catch (error) {
