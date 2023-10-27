@@ -11,14 +11,15 @@
 <body>
   <div class="container">
     <div class="prompt">
-      <h1>JSON Tree Viewer</h1>
+      <h1 class="prompt__title">JSON Tree Viewer</h1>
       <p>Simple JSON Viewer that runs completely on-client. No data exchange </p>
-      <input type="file" size="60" />
+      <input id="input-file" type="file" size="60" hidden />
+      <label class="button" for="input-file">Load JSON</label>
+      <span class="prompt__error">Invalid file. Please load a valid JSON file.</span>
       <marquee class="prompt__loading">
         Calma Javascripto! Estamos carregando seu arquivo, as vezes ele pode ser meio grande, mas aí a culpa é sua de
         querer fazer isso
       </marquee>
-      <span class="prompt__error">Invalid file. Please load a valid JSON file.</span>
     </div>
 
 

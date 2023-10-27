@@ -5,7 +5,7 @@ let list: any[] = [];
 const lineHeight = 20;
 let listScrolltop = 0;
 const listHeaderHeight = 80;
-
+const inputElement = document.querySelector("input") as HTMLElement;
 const listElement = document.querySelector(".viewer__list") as HTMLElement;
 const promptElement = document.querySelector(".prompt") as HTMLElement;
 const loadingElement = document.querySelector(
@@ -49,7 +49,9 @@ function getListHeights() {
 
 function readSingleFile(e: any) {
   if (!e.target.files) return;
+  hideErrorMessage();
   showLoadingMessage();
+  disableInput();
   var file = e.target.files[0];
   if (!file) {
     return;
@@ -81,6 +83,7 @@ flattenWorker.onmessage = function (e) {
   if (e.data.type === "ERROR") {
     showErrorMessage();
     hideLoadingMessage();
+    enableInput();
     return;
   }
 };
@@ -135,6 +138,14 @@ function hidePrompt() {
   promptElement.style.display = "none";
 }
 
+function enableInput() {
+  inputElement.removeAttribute("disabled");
+}
+
+function disableInput() {
+  inputElement.setAttribute("disabled", "disabled");
+}
+
 function showLoadingMessage() {
   loadingElement.style.visibility = "initial";
 }
@@ -144,7 +155,11 @@ function hideLoadingMessage() {
 }
 
 function showErrorMessage() {
-  errorElement.style.visibility = "initial";
+  errorElement.style.display = "block";
+}
+
+function hideErrorMessage() {
+  errorElement.style.display = "none";
 }
 
 function showViewer() {
