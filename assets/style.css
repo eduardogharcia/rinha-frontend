@@ -54,6 +54,10 @@ p {
   visibility: hidden;
 }
 
+.prompt__example-files {
+  font-size: 12px;
+}
+
 .prompt__error {
   color: #bf0e0e;
   display: none;
