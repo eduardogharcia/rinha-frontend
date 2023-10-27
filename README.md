@@ -4,6 +4,8 @@ Este é o repositório da Rinha de Frontend. Esta é uma brincadeira e um desafi
 
 O desafio consiste em montar um sistema Frontend com a stack que você quiser, e estressá-lo de acordo com as especificações abaixo, simplesmente pra ver o que acontece. Quem tirar a melhor performance nos critérios aqui estabelecidos, vence.
 
+🔗 [Meu projeto finalizado (Eduardo)](https://eduardogharcia.github.io/rinha-frontend/)
+
 🔗 [Link para participar](https://codante.io/rinha-frontend)
 
 ## O Desafio
@@ -36,7 +38,7 @@ Caso, ao final, existam mais de um projeto que conseguiram carregar os mesmos ar
 
 3. **Acessibilidade**: Sua aplicação deverá ser o mais acessível que você puder (ideal que esteja completamente acessível). Deve ser possível navegar na sua _tree view_ de maneira acessível.
 
-De acordo com esses três itens acima, iremos realizar os desempates até que consigamos as 10 primeiras colocações. Para todas as outras colocações não iremos realizar desempates.  
+De acordo com esses três itens acima, iremos realizar os desempates até que consigamos as 10 primeiras colocações. Para todas as outras colocações não iremos realizar desempates.
 
 ### Análise
 
