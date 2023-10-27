@@ -7,8 +7,6 @@
     "dev": "vite --host"
   },
   "devDependencies": {
-    "sass": "^1.69.4",
-    "typescript": "^5.2.2",
     "vite": "^4.3.9"
   }
 }

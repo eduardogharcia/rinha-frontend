@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.button {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  opacity: 0.7;
+  background: linear-gradient(180deg, #e4e4e4 0%, #f7f7f7 100%);
+}
+
+input:disabled ~ .button {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.container {
+  flex: 1;
+  max-width: 638px;
+}
+
+.prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.prompt__title {
+  margin: 0;
+  font-size: 48px;
+  font-weight: normal;
+}
+
+p {
+  margin: 0;
+}
+
+.prompt__loading {
+  visibility: hidden;
+}
+
+.prompt__error {
+  color: #bf0e0e;
+  display: none;
+}
+
+.viewer__header {
+  margin: 0;
+  padding: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.viewer__list {
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.viewer__list-item {
+  height: 20px;
+  list-style: none;
+  position: relative;
+  white-space: nowrap;
+}
+
+.viewer__list-item__key {
+  color: #4e9590;
+}
+
+.viewer__list-item__value--block {
+  color: #f2cab8;
+}
+
+.viewer__list-item__lines {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 20px;
+  background: repeating-linear-gradient(
+    90deg,
+    #bfbfbf,
+    #bfbfbf 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}

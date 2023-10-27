@@ -1,21 +1,17 @@
-const flattenWorker = new Worker("./src/flatten-worker.js");
+const flattenWorker = new Worker("./assets/flatten-worker.js");
 
 let filename = "";
-let list: any[] = [];
+let list = [];
 const lineHeight = 20;
 let listScrolltop = 0;
 const listHeaderHeight = 80;
-const inputElement = document.querySelector("input") as HTMLElement;
-const listElement = document.querySelector(".viewer__list") as HTMLElement;
-const promptElement = document.querySelector(".prompt") as HTMLElement;
-const loadingElement = document.querySelector(
-  ".prompt__loading"
-) as HTMLElement;
-const errorElement = document.querySelector(".prompt__error") as HTMLElement;
-const viewerElement = document.querySelector(".viewer") as HTMLElement;
-const viewHeaderElement = document.querySelector(
-  ".viewer__header"
-) as HTMLElement;
+const inputElement = document.querySelector("input");
+const listElement = document.querySelector(".viewer__list");
+const promptElement = document.querySelector(".prompt");
+const loadingElement = document.querySelector(".prompt__loading");
+const errorElement = document.querySelector(".prompt__error");
+const viewerElement = document.querySelector(".viewer");
+const viewHeaderElement = document.querySelector(".viewer__header");
 
 viewerElement.style.display = "none";
 
@@ -28,11 +24,9 @@ window.addEventListener("resize", () => {
   renderList();
 });
 
-(document.querySelector("input") as Element).addEventListener(
-  "change",
-  readSingleFile,
-  false
-);
+document
+  .querySelector("input")
+  .addEventListener("change", readSingleFile, false);
 
 function getListHeights() {
   const windowHeight = window.innerHeight;
@@ -47,7 +41,7 @@ function getListHeights() {
   };
 }
 
-function readSingleFile(e: any) {
+function readSingleFile(e) {
   if (!e.target.files) return;
   hideErrorMessage();
   showLoadingMessage();
@@ -62,7 +56,7 @@ function readSingleFile(e: any) {
   var reader = new FileReader();
   reader.onload = function (e) {
     if (!e.target) return;
-    var contents = e.target.result as string;
+    var contents = e.target.result;
     flattenWorker.postMessage(contents);
   };
 
@@ -168,7 +162,7 @@ function showViewer() {
   viewHeaderElement.innerHTML = filename;
 }
 
-function createListItem(item: any) {
+function createListItem(item) {
   const itemlist = document.createElement("li");
   itemlist.classList.add("viewer__list-item");
   itemlist.style.paddingLeft = `calc(10px * ${item.level})`;
@@ -205,7 +199,7 @@ function createListItem(item: any) {
 
   itemlist.prepend(verticalLines);
 
-  function renderValue(item: any) {
+  function renderValue(item) {
     if (typeof item.value === "string" && item.type === "PRIMTIVE") {
       return `"${item.value}"`;
     }
@@ -216,12 +210,12 @@ function createListItem(item: any) {
   return itemlist;
 }
 
-function createGhostListItem(height: number) {
+function createGhostListItem(height) {
   const ghostItem = document.createElement("div");
   ghostItem.style.height = height + "px";
   return ghostItem;
 }
 
-function clamp(value: number, min: number, max: number) {
+function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
