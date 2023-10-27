@@ -11,6 +11,7 @@ const promptElement = document.querySelector(".prompt") as HTMLElement;
 const loadingElement = document.querySelector(
   ".prompt__loading"
 ) as HTMLElement;
+const errorElement = document.querySelector(".prompt__error") as HTMLElement;
 const viewerElement = document.querySelector(".viewer") as HTMLElement;
 const viewHeaderElement = document.querySelector(
   ".viewer__header"
@@ -74,6 +75,13 @@ flattenWorker.onmessage = function (e) {
 
   if (e.data.type === "EOF") {
     displayContents();
+    return;
+  }
+
+  if (e.data.type === "ERROR") {
+    showErrorMessage();
+    hideLoadingMessage();
+    return;
   }
 };
 
@@ -129,6 +137,14 @@ function hidePrompt() {
 
 function showLoadingMessage() {
   loadingElement.style.visibility = "initial";
+}
+
+function hideLoadingMessage() {
+  loadingElement.style.visibility = "hidden";
+}
+
+function showErrorMessage() {
+  errorElement.style.visibility = "initial";
 }
 
 function showViewer() {

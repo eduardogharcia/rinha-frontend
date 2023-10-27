@@ -1,23 +1,28 @@
 const buffersize = 200000;
 
 onmessage = function (e) {
-  const parsed = JSON.parse(e.data);
-  const flatened = flattenJSONObj(parsed);
+  try {
+    const parsed = JSON.parse(e.data);
+    const flatened = flattenJSONObj(parsed);
 
-  let buffer = [];
+    let buffer = [];
 
-  for (let index = 0; index < flatened.length; index++) {
-    buffer.push(flatened[index]);
+    for (let index = 0; index < flatened.length; index++) {
+      buffer.push(flatened[index]);
 
-    if (buffer.length >= 200000) {
-      this.postMessage({ type: "CHUNK", data: buffer });
-      buffer = [];
+      if (buffer.length >= 200000) {
+        this.postMessage({ type: "CHUNK", data: buffer });
+        buffer = [];
+      }
     }
+
+    this.postMessage({ type: "CHUNK", data: buffer });
+
+    this.postMessage({ type: "EOF" });
+  } catch (error) {
+    this.postMessage({ type: "ERROR" });
+    return;
   }
-
-  this.postMessage({ type: "CHUNK", data: buffer });
-
-  this.postMessage({ type: "EOF" });
 };
 
 function flattenJSONObj(obj, prevNormalized = [], level = 0) {

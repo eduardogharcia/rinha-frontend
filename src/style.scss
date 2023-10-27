@@ -25,6 +25,12 @@ body {
     margin-top: 20px;
     visibility: hidden;
   }
+
+  &__error {
+    margin-top: 20px;
+    color: #bf0e0e;
+    visibility: hidden;
+  }
 }
 
 .viewer {
