@@ -1,7 +1,6 @@
 const flattenWorker = new Worker("./assets/flatten-worker.js");
 
 let filename = "";
-let listRaw = "";
 let list = [];
 const lineHeight = 20;
 let listScrolltop = 0;
@@ -98,13 +97,13 @@ flattenWorker.onmessage = function (e) {
     const dec = new TextDecoder();
     const decoded = dec.decode(e.data.data);
     const parsed = JSON.parse(decoded);
-    list = list.concat(parsed);
+    list.push(parsed);
     return;
   }
 
   if (e.data.type === "EOF") {
     console.timeEnd("received-back");
-
+    list = list.flat();
     console.time("render");
     displayContents();
     console.timeEnd("render");
