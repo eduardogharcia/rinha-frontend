@@ -1,6 +1,7 @@
 const flattenWorker = new Worker("./assets/flatten-worker.js");
 
 let filename = "";
+let listRaw = "";
 let list = [];
 const lineHeight = 20;
 let listScrolltop = 0;
@@ -88,17 +89,21 @@ function readSingleFile(e) {
 let staredReceivedBackTimer = false;
 
 flattenWorker.onmessage = function (e) {
+  console.log("chegou", e.data);
   if (e.data.type === "CHUNK") {
     if (!staredReceivedBackTimer) {
       console.time("received-back");
       staredReceivedBackTimer = true;
     }
-    list = list.concat(e.data.data);
+    const dec = new TextDecoder();
+    const decoded = dec.decode(e.data.data);
+    listRaw = listRaw + decoded;
     return;
   }
 
   if (e.data.type === "EOF") {
     console.timeEnd("received-back");
+    list = JSON.parse(listRaw);
 
     console.time("render");
     displayContents();

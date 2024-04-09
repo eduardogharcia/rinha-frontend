@@ -1,4 +1,4 @@
-const buffersize = 800000;
+const buffersize = 200000;
 
 onmessage = function (e) {
   try {
@@ -20,12 +20,27 @@ onmessage = function (e) {
 
       if (buffer.length >= buffersize) {
         chunkAmount++;
-        this.postMessage({ type: "CHUNK", data: buffer });
+
+        const finalJsonStringfied = JSON.stringify(buffer);
+        const enc = new TextEncoder();
+        const encoded = enc.encode(finalJsonStringfied);
+        const encodedBuffer = encoded.buffer;
+
+        this.postMessage({ type: "CHUNK", data: encodedBuffer }, [
+          encodedBuffer,
+        ]);
+
         buffer = [];
       }
     }
     chunkAmount++;
-    this.postMessage({ type: "CHUNK", data: buffer });
+
+    const finalJsonStringfied = JSON.stringify(buffer);
+    const enc = new TextEncoder();
+    const encoded = enc.encode(finalJsonStringfied);
+    const encodedBuffer = encoded.buffer;
+
+    this.postMessage({ type: "CHUNK", data: encodedBuffer }, [encodedBuffer]);
 
     this.postMessage({ type: "EOF" });
 
