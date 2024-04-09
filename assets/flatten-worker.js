@@ -12,35 +12,16 @@ onmessage = function (e) {
 
     console.time("send-back");
 
-    let buffer = [];
-    let chunkAmount = 0;
+    for (let index = 0; index < flatened.length; index = index + buffersize) {
+      const finalJsonStringfied = JSON.stringify(
+        flatened.slice(index, index + buffersize)
+      );
+      const enc = new TextEncoder();
+      const encoded = enc.encode(finalJsonStringfied);
+      const encodedBuffer = encoded.buffer;
 
-    for (let index = 0; index < flatened.length; index++) {
-      buffer.push(flatened[index]);
-
-      if (buffer.length >= buffersize) {
-        chunkAmount++;
-
-        const finalJsonStringfied = JSON.stringify(buffer);
-        const enc = new TextEncoder();
-        const encoded = enc.encode(finalJsonStringfied);
-        const encodedBuffer = encoded.buffer;
-
-        this.postMessage({ type: "CHUNK", data: encodedBuffer }, [
-          encodedBuffer,
-        ]);
-
-        buffer = [];
-      }
+      this.postMessage({ type: "CHUNK", data: encodedBuffer }, [encodedBuffer]);
     }
-    chunkAmount++;
-
-    const finalJsonStringfied = JSON.stringify(buffer);
-    const enc = new TextEncoder();
-    const encoded = enc.encode(finalJsonStringfied);
-    const encodedBuffer = encoded.buffer;
-
-    this.postMessage({ type: "CHUNK", data: encodedBuffer }, [encodedBuffer]);
 
     this.postMessage({ type: "EOF" });
 

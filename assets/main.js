@@ -97,13 +97,13 @@ flattenWorker.onmessage = function (e) {
     }
     const dec = new TextDecoder();
     const decoded = dec.decode(e.data.data);
-    listRaw = listRaw + decoded;
+    const parsed = JSON.parse(decoded);
+    list = list.concat(parsed);
     return;
   }
 
   if (e.data.type === "EOF") {
     console.timeEnd("received-back");
-    list = JSON.parse(listRaw);
 
     console.time("render");
     displayContents();
