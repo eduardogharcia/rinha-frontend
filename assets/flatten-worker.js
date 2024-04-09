@@ -1,24 +1,36 @@
-const buffersize = 200000;
+const buffersize = 800000;
 
 onmessage = function (e) {
   try {
+    console.time("parse-json");
     const parsed = JSON.parse(e.data);
+    console.timeEnd("parse-json");
+
+    console.time("flatten-json");
     const flatened = flattenJSONObj(parsed);
+    console.timeEnd("flatten-json");
+
+    console.time("send-back");
 
     let buffer = [];
+    let chunkAmount = 0;
 
     for (let index = 0; index < flatened.length; index++) {
       buffer.push(flatened[index]);
 
-      if (buffer.length >= 200000) {
+      if (buffer.length >= buffersize) {
+        chunkAmount++;
         this.postMessage({ type: "CHUNK", data: buffer });
         buffer = [];
       }
     }
-
+    chunkAmount++;
     this.postMessage({ type: "CHUNK", data: buffer });
 
     this.postMessage({ type: "EOF" });
+
+    console.timeEnd("send-back");
+    console.log(chunkAmount, "chunks of", buffersize, "items max");
   } catch (error) {
     this.postMessage({ type: "ERROR" });
     return;

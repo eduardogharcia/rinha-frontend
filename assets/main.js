@@ -12,8 +12,26 @@ const loadingElement = document.querySelector(".prompt__loading");
 const errorElement = document.querySelector(".prompt__error");
 const viewerElement = document.querySelector(".viewer");
 const viewHeaderElement = document.querySelector(".viewer__header");
+const renderTimeDisplay = document.querySelector(".render-time__value");
 
 viewerElement.style.display = "none";
+
+const renderTimes = [];
+
+function addNewRenderTime(renderTime) {
+  if (renderTimes.length >= 20) {
+    renderTimes.shift();
+  }
+  renderTimes.push(renderTime);
+}
+
+function renderRenderTime() {
+  const sum = renderTimes.reduce((prev, acc) => prev + acc, 0);
+
+  const average = sum / renderTimes.length;
+
+  renderTimeDisplay.innerHTML = average.toFixed(4) + "ms";
+}
 
 listElement.addEventListener("scroll", () => {
   listScrolltop = listElement.scrollTop;
@@ -42,6 +60,7 @@ function getListHeights() {
 }
 
 function readSingleFile(e) {
+  console.time("all");
   if (!e.target.files) return;
   hideErrorMessage();
   showLoadingMessage();
@@ -57,20 +76,33 @@ function readSingleFile(e) {
   reader.onload = function (e) {
     if (!e.target) return;
     var contents = e.target.result;
+
+    console.time("post-message");
     flattenWorker.postMessage(contents);
+    console.timeEnd("post-message");
   };
 
   reader.readAsText(file);
 }
 
+let staredReceivedBackTimer = false;
+
 flattenWorker.onmessage = function (e) {
   if (e.data.type === "CHUNK") {
+    if (!staredReceivedBackTimer) {
+      console.time("received-back");
+      staredReceivedBackTimer = true;
+    }
     list = list.concat(e.data.data);
     return;
   }
 
   if (e.data.type === "EOF") {
+    console.timeEnd("received-back");
+
+    console.time("render");
     displayContents();
+    console.timeEnd("render");
     return;
   }
 
@@ -86,6 +118,7 @@ function displayContents() {
   try {
     showViewer();
     renderList();
+    console.timeEnd("all");
   } catch (error) {
     // show error message
     console.log("invalid json", error);
@@ -93,6 +126,7 @@ function displayContents() {
 }
 
 function renderList() {
+  const beginTime = window.performance.now();
   const { listHeight, visibleListAmount } = getListHeights();
 
   listElement.style.height = listHeight + "px";
@@ -126,6 +160,9 @@ function renderList() {
   });
 
   listElement.append(createGhostListItem(endGhostItemHeight));
+  const endTime = window.performance.now();
+  addNewRenderTime(endTime - beginTime);
+  renderRenderTime();
 }
 
 function hidePrompt() {

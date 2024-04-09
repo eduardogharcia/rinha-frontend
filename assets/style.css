@@ -106,3 +106,12 @@ p {
     transparent 10px
   );
 }
+
+.render-time {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding-inline: 10px;
+  background-color: #bf0e0e;
+  color: #fff;
+}
