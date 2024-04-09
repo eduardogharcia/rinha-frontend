@@ -1,5 +1,3 @@
-const flattenWorker = new Worker("./assets/flatten-worker.js");
-
 let filename = "";
 let list = [];
 const lineHeight = 20;
@@ -13,10 +11,38 @@ const errorElement = document.querySelector(".prompt__error");
 const viewerElement = document.querySelector(".viewer");
 const viewHeaderElement = document.querySelector(".viewer__header");
 const renderTimeDisplay = document.querySelector(".render-time__value");
+let jsonContent = {};
+const renderTimes = [];
 
 viewerElement.style.display = "none";
 
-const renderTimes = [];
+function flattenJSONObj(obj, prevNormalized = [], level = 0) {
+  for (const key in obj) {
+    if (typeof obj[key] !== "object") {
+      prevNormalized.push({ type: "PRIMTIVE", key, value: obj[key], level });
+    } else {
+      if (obj[key] == null) {
+        prevNormalized.push({ type: "PRIMTIVE", key, value: "null", level });
+      } else {
+        if (Array.isArray(obj[key])) {
+          prevNormalized.push({ type: "ARRAY_START", key, value: "[", level });
+        } else {
+          prevNormalized.push({ type: "OBJECT_START", key, value: "{", level });
+        }
+
+        flattenJSONObj(obj[key], prevNormalized, level + 1);
+
+        if (Array.isArray(obj[key])) {
+          prevNormalized.push({ type: "OBJECT_START", value: "]", level });
+        } else {
+          prevNormalized.push({ type: "OBJECT_END", value: "}", level });
+        }
+      }
+    }
+  }
+
+  return prevNormalized;
+}
 
 function addNewRenderTime(renderTime) {
   if (renderTimes.length >= 20) {
@@ -77,42 +103,21 @@ function readSingleFile(e) {
     if (!e.target) return;
     var contents = e.target.result;
 
-    console.time("post-message");
-    flattenWorker.postMessage(contents);
-    console.timeEnd("post-message");
-  };
+    console.time("parse-json");
+    jsonContent = JSON.parse(contents);
+    console.timeEnd("parse-json");
 
-  reader.readAsText(file);
-}
-
-let staredReceivedBackTimer = false;
-
-flattenWorker.onmessage = function (e) {
-  if (e.data.type === "CHUNK") {
-    if (!staredReceivedBackTimer) {
-      console.time("received-back");
-      staredReceivedBackTimer = true;
-    }
-    list = list.concat(e.data.data);
-    return;
-  }
-
-  if (e.data.type === "EOF") {
-    console.timeEnd("received-back");
+    console.time("flatten-json");
+    list = flattenJSONObj(jsonContent);
+    console.timeEnd("flatten-json");
 
     console.time("render");
     displayContents();
     console.timeEnd("render");
-    return;
-  }
+  };
 
-  if (e.data.type === "ERROR") {
-    showErrorMessage();
-    hideLoadingMessage();
-    enableInput();
-    return;
-  }
-};
+  reader.readAsText(file);
+}
 
 function displayContents() {
   try {
